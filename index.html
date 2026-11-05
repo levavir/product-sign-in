@@ -1,0 +1,68 @@
+<!doctype html>
+<!-- index.html: sign-in page of the new student launcher, product.aethos-ai.com (spec-app, chapter 5.2).
+Shows the Google sign-in window and asks for identity only (name and email). After sign-in, posts the identity token to the app
+in a POST form, so the token is not kept in the address. Settings: config.js. Return address: the app parameter, within the allow list in config.js. -->
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>כניסה: מסך ההפעלה לתלמידים</title>
+  <style>
+    :root { --bg: #f4f7f5; --card: #ffffff; --ink: #1d2b24; --muted: #5b6b63; --line: #d8e2dc; --accent: #1f6b4a; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #151b18; --card: #1e2622; --ink: #e6efe9; --muted: #a3b3aa; --line: #2f3a35; --accent: #5cc08f; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--ink); font-family: system-ui, "Segoe UI", Arial, sans-serif; padding: 16px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 32px 28px; max-width: 420px; width: 100%; text-align: center; }
+    h1 { margin: 0 0 8px; font-size: 1.4rem; color: var(--accent); }
+    p { margin: 0 0 20px; color: var(--muted); line-height: 1.6; }
+    #btn { display: flex; justify-content: center; min-height: 44px; }
+    .err { color: #b3261e; margin-top: 16px; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>מסך ההפעלה לתלמידים</h1>
+    <p>נכנסים עם חשבון הגוגל שמחובר לקלוד. מגוגל מתקבלים רק פרטי הזהות: שם, כתובת מייל ותמונה.</p>
+    <div id="btn"></div>div>
+    <p class="err" id="err" hidden></p>
+    </main>main>
+  <script src="config.js"></script>
+  <script>
+    function showErr(t) { var e = document.getElementById('err'); e.textContent = t; e.hidden = false; }
+    /* Return address: the app parameter when it is in the allow list, otherwise the first in the list. The closed list prevents sending the token to a foreign address. */
+    function appUrl() {
+      var list = (window.SIGNIN_CONFIG || {}).appUrls || [];
+      var m = location.search.match(/[?&]app=([^&]+)/), want = m ? decodeURIComponent(m[1]) : '';
+      return list.indexOf(want) >= 0 ? want : list[0];
+    }
+    /* Token from Google: posted to the app in a form, in the top frame. */
+    var sent = false;
+    function onCredential(resp) {
+      if (sent) return; sent = true;
+      var f = document.createElement('form');
+      f.method = 'POST'; f.action = appUrl(); f.target = '_top';
+      var i = document.createElement('input');
+      i.type = 'hidden'; i.name = 'credential'; i.value = resp.credential;
+      f.appendChild(i); document.body.appendChild(f); f.submit();
+    }
+    function start() {
+      var c = window.SIGNIN_CONFIG || {};
+      if (!c.clientId || !(c.appUrls && c.appUrls.length)) return showErr('הדף עדיין לא הוגדר. פונים למרצה.');
+      var btn = document.getElementById('btn');
+      setTimeout(function () { if (!btn.children.length) showErr('כפתור הכניסה לא נטען. מרעננים את הדף, ואם זה חוזר, פונים למרצה.'); }, 4000);
+      try {
+        google.accounts.id.initialize({ client_id: c.clientId, callback: onCredential, auto_select: true, itp_support: true });
+        google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', text: 'signin_with', locale: 'he' });
+        if (/[?&]signout=1/.test(location.search)) google.accounts.id.disableAutoSelect();
+        else google.accounts.id.prompt();
+      } catch (e) { showErr('הכניסה לא הופעלה. פונים למרצה.'); }
+    }
+  </script>
+    <script src="https://accounts.google.com/gsi/client" async onload="start()" onerror="showErr('ספריית הכניסה של גוגל לא נטענה. בודקים את החיבור לרשת ומרעננים.')"></script>
+  </body>
+</html>html>
+
+  </script></p></h1>
+  </body>
+  </style></title>
+  </head>
