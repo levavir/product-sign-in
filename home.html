@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- home.html: public home page of the AETHOS AI course system, the homepage URL on the Google consent screen. Hebrew first, English second (for Google review). -->
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>מערכת הקורס: AETHOS AI</title>
+  <style>
+    :root { --bg: #f4f7f5; --card: #ffffff; --ink: #1d2b24; --muted: #5b6b63; --line: #d8e2dc; --accent: #1f6b4a; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #151b18; --card: #1e2622; --ink: #e6efe9; --muted: #a3b3aa; --line: #2f3a35; --accent: #5cc08f; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px 16px; font-family: system-ui, "Segoe UI", Arial, sans-serif; line-height: 1.7; color: var(--ink); background: var(--bg); }
+    main { max-width: 720px; margin: 0 auto; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+    h1 { color: var(--accent); font-size: 1.4rem; margin-top: 0; }
+    h2 { color: var(--accent); font-size: 1.1rem; margin-top: 24px; }
+    a { color: var(--accent); }
+    .en { direction: ltr; text-align: left; border-top: 1px solid var(--line); margin-top: 32px; padding-top: 8px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>מערכת הקורס</h1>
+    <p>מערכת הליווי של קורס מיישמי AI. המשתתף מקים בה פרויקט, עובד על מסמך הדרישות שלו עם עוזר AI, ועוקב אחרי ההתקדמות.</p>
+    <h2>מה המערכת עושה</h2>
+    <p>בכניסה עם חשבון גוגל, המערכת יוצרת בדרייב של המשתתף את תיקיית הפרויקט ואת מסמך הדרישות מתוך תבנית הקורס, ומציגה את מצב הפרויקט. התיקייה והקבצים נשארים בבעלות המשתתף.</p>
+    <h2>הרשאות</h2>
+    <p>המערכת מבקשת פרטי זהות בסיסיים, וגישה לקבצים שהיא עצמה יוצרת בדרייב בלבד.</p>
+    <p><a href="privacy.html">מדיניות פרטיות</a> · <a href="index.html">כניסה למערכת</a></p>
+
+    <section class="en" lang="en">
+      <h1>Course System</h1>
+      <p>The mentoring system of the AI implementers course. Participants set up a project, work on its requirements document with an AI assistant, and track their progress.</p>
+      <h2>What the system does</h2>
+      <p>After signing in with Google, the system creates the project folder and the requirements document from the course template in the participant's own Google Drive, and shows the project status. The folder and files remain owned by the participant.</p>
+      <h2>Permissions</h2>
+      <p>The system requests basic identity information, and access only to the files it creates in Drive.</p>
+      <p><a href="privacy.html">Privacy Policy</a> · <a href="index.html">Sign in</a></p>
+    </section>
+  </main>
+</body>
+</html>
