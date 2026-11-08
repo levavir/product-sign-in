@@ -1,22 +1,29 @@
 <!doctype html>
 <!-- index.html: sign-in page of the new student launcher, product.aethos-ai.com (spec-app, chapter 5.2).
      Shows the Google sign-in window and asks for identity only (name and email). After sign-in, posts the identity token to the app
-     in a POST form, so the token is not kept in the address. Settings: config.js. Return address: the app parameter, within the allow list in config.js. -->
+     in a POST form, so the token is not kept in the address. Settings: config.js. Return address: the app parameter, within the allow list in config.js.
+     Own domain (round 57, trial): the token is posted into a frame on this page, so the app shows inside this page and the address bar
+     keeps product.aethos-ai.com. The app allows this (XFrameOptionsMode ALLOWALL in Orchestrator.gs). -->
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>כניסה: מסך ההפעלה לתלמידים</title>
+  <title>מסך ההפעלה לתלמידים</title>
   <style>
     :root { --bg: #f4f7f5; --card: #ffffff; --ink: #1d2b24; --muted: #5b6b63; --line: #d8e2dc; --accent: #1f6b4a; }
     @media (prefers-color-scheme: dark) { :root { --bg: #151b18; --card: #1e2622; --ink: #e6efe9; --muted: #a3b3aa; --line: #2f3a35; --accent: #5cc08f; } }
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--ink); font-family: system-ui, "Segoe UI", Arial, sans-serif; padding: 16px; }
+    body.in-app { display: block; padding: 0; overflow: hidden; }
     .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 32px 28px; max-width: 420px; width: 100%; text-align: center; }
     h1 { margin: 0 0 8px; font-size: 1.4rem; color: var(--accent); }
     p { margin: 0 0 20px; color: var(--muted); line-height: 1.6; }
     #btn { display: flex; justify-content: center; min-height: 44px; }
     .err { color: #b3261e; margin-top: 16px; }
+    #app { display: none; border: 0; width: 100%; height: 100vh; }
+    body.in-app #app { display: block; }
+    body.in-app .card { display: none; }
   </style>
 </head>
 <body>
@@ -26,6 +33,7 @@
     <div id="btn"></div>
     <p class="err" id="err" hidden></p>
   </main>
+  <iframe id="app" name="app" title="מסך ההפעלה לתלמידים"></iframe>
   <script src="config.js"></script>
   <script>
     function showErr(t) { var e = document.getElementById('err'); e.textContent = t; e.hidden = false; }
@@ -37,15 +45,17 @@
       return list.indexOf(want) >= 0 ? want : list[0];
     }
 
-    /** Token from Google: posted to the app in a form, in the top frame. */
+    /** Token from Google: posted to the app in a form, into the frame on this page. */
     var sent = false;
     function onCredential(resp) {
       if (sent) return; sent = true;
       var f = document.createElement('form');
-      f.method = 'POST'; f.action = appUrl(); f.target = '_top';
+      f.method = 'POST'; f.action = appUrl(); f.target = 'app';
       var i = document.createElement('input');
       i.type = 'hidden'; i.name = 'credential'; i.value = resp.credential;
-      f.appendChild(i); document.body.appendChild(f); f.submit();
+      f.appendChild(i); document.body.appendChild(f);
+      document.body.classList.add('in-app');
+      f.submit();
     }
 
     function start() {
